@@ -8,6 +8,13 @@ st.header("🚗 Used Cars Analysis in the U.S.")
 # 2. Load dataset
 df = pd.read_csv("vehicles_us.csv")
 
+# reviewer note -
+df["model_year"] = df["model_year"].fillna(df["model_year"].median())
+df["cylinders"] = df.groupby("model")["cylinders"].transform(lambda x: x.fillna(x.median()))
+df["odometer"] = df.groupby("model")["odometer"].transform(lambda x: x.fillna(x.median()))
+df["paint_color"] = df["paint_color"].fillna("Unknown")
+
+
 # 3. Checkbox to display the first few rows
 if st.checkbox("📋 Show first rows of the dataset"):
     st.write(df.head())
@@ -63,7 +70,7 @@ fig_fuel = px.histogram(
     nbins=50,
     title="Vehicle Price Distribution by Fuel Type",
     labels={"fuel": "Fuel Type", "price": "Price"},
-    barmode="overlay"  # puedes cambiar a "group" si prefieres barras lado a lado
+    barmode="overlay"  
 )
 
 st.plotly_chart(fig_fuel)
